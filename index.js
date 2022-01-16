@@ -20,13 +20,19 @@ io.on('connection', socket => {
     })
     socket.on('guest-join', (roomId) => {
         console.log('guest joined room')
-    
+        socket.join(roomId)
         var host = hosts.find(host => host.roomId == roomId)
         
         if(host){
             io.to(socket.id).emit('host-id', host.socketId)
         }
         
+    })
+    socket.on('kickguests', (roomId) => {
+        io.to(roomId).emit('leave', roomId)
+    })
+    socket.on('leave', roomId => {
+        socket.leave(roomId)
     })
 
     socket.on('message-to-host', (userId, message) => {
