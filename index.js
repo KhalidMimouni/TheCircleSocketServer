@@ -13,9 +13,11 @@ io.on('connection', socket => {
         
         var host = {socketId: socket.id, roomId: roomId}
         hosts.push(host)
+        socket.to(roomId).emit('host-id', socket.id)
         socket.on('disconnect', () => {
             console.log('host disconnected from room')
-            hosts.splice(host, 1)
+            const indexOfHostInArray = hosts.indexOf(host)
+            hosts.splice(indexOfHostInArray, 1)
         })
     })
     socket.on('guest-join', (roomId) => {
