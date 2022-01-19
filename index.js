@@ -28,6 +28,9 @@ io.on('connection', socket => {
         if(host){
             io.to(socket.id).emit('host-id', host.socketId)
         }
+        else{
+            io.to(socket.id).emit('no-host-found')
+        }
         
     })
     socket.on('kickguests', (roomId) => {
