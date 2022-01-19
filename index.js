@@ -23,7 +23,14 @@ io.on('connection', socket => {
     socket.on('guest-join', (roomId) => {
         console.log('guest joined room')
         socket.join(roomId)
-        getHostSocketId(roomId)
+        const host = hosts.find(host => host.roomId == roomId)
+
+        if (host) {
+            io.to(socket.id).emit('host-id', host.socketId)
+        }
+        else {
+            io.to(socket.id).emit('no-host-found')
+        }
 
     })
     socket.on('kickguests', (roomId) => {
@@ -49,15 +56,4 @@ function deleteHostFromArray(host) {
     const indexOfHostInArray = hosts.indexOf(host)
     hosts.splice(indexOfHostInArray, 1)
 }
-function getHostSocketId(roomId) {
-    const host = hosts.find(host => host.roomId == roomId)
-
-    if (host) {
-        io.to(socket.id).emit('host-id', host.socketId)
-    }
-    else {
-        io.to(socket.id).emit('no-host-found')
-    }
-}
-
 httpserver.listen(port, () => console.log(`signalling server is listening on port ${port}`))
