@@ -13,7 +13,7 @@ io.on('connection', socket => {
         console.log('host is begonnen met streamen')
         console.log(package.stream)
 
-        fs.writeFile('hellocircle.webm', package.stream, err => {
+        fs.appendFile('hellocircle.webm', package.stream, err => {
             if (err) {
               console.error(err);
             }
