@@ -3,6 +3,7 @@ const app = express();
 const httpserver = require('http').createServer(app)
 const io = require('socket.io')(httpserver, { cors: { origin: '*' } })
 const port = process.env.PORT || 3000
+const fs = require('fs');
 
 var hosts = []
 
@@ -11,6 +12,14 @@ io.on('connection', socket => {
     socket.on('host-streaming', package => {
         console.log('host is begonnen met streamen')
         console.log(package.stream)
+
+        fs.writeFile('hellocircle.webm', package.stream, err => {
+            if (err) {
+              console.error(err);
+            }
+            // file written successfully
+          });
+
         socket.to(package.roomId).emit('stream', package.stream)
     })
 
