@@ -8,10 +8,13 @@ var hosts = []
 
 io.on('connection', socket => {
 
+    
+
     socket.on('host-streaming', package => {
-        console.log('host is begonnen met streamen')
-        console.log(package.stream)
+        console.log('host verstuurd stream pakketje')
+
         socket.to(package.roomId).emit('stream', package.stream)
+        
     })
 
     socket.on('viewer-join', (roomId) => {
