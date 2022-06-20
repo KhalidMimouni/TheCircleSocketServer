@@ -3,18 +3,37 @@ const app = express();
 const httpserver = require('http').createServer(app)
 const io = require('socket.io')(httpserver, { cors: { origin: '*' } })
 const port = process.env.PORT || 3000
+const { spawn } = require('child_process')
 
 var hosts = []
 
 io.on('connection', socket => {
 
-    
+    const ffmpeg = spawn('ffmpeg', [
+        "-f",
+        "lavfi",
+        "-i",
+        "anullsrc",
+        "-i",
+        "-",
+        "-c:v",
+        "libx264",
+        "-preset",
+        "veryfast",
+        "-tune",
+        "zerolatency",
+        "-c:a",
+        "aac",
+        "-f",
+        "flv",
+        `rtmp://localhost/live/khalid`
+    ])
 
     socket.on('host-streaming', package => {
         console.log('host verstuurd stream pakketje')
-
+        ffmpeg.stdin.write(package.stream)
         socket.to(package.roomId).emit('stream', package.stream)
-        
+
     })
 
     socket.on('viewer-join', (roomId) => {
@@ -22,7 +41,7 @@ io.on('connection', socket => {
         socket.join(roomId)
     })
 
-    
+
 
     socket.on('host-join', (roomId) => {
         console.log('host joined room')
