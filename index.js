@@ -91,4 +91,4 @@ function deleteHostFromArray(host) {
     const indexOfHostInArray = hosts.indexOf(host)
     hosts.splice(indexOfHostInArray, 1)
 }
-httpserver.listen(port, () => console.log(`signalling server is listening on port ${port}`))
+httpserver.listen(port, () => console.log(`Socket server is listening on port ${port}`))
